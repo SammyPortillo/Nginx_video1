@@ -1,0 +1,7 @@
+
+
+
+
+
+https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/progress_event
+https://stackoverflow.com/questions/50333767/html5-video-streaming-video-with-blob-urls
