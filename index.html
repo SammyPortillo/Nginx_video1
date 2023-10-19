@@ -30,6 +30,9 @@
         var mediaSource = this;
         var sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
         fetchAB(assetURL, function (buf) {
+
+          console.log('fetchAB');
+
           sourceBuffer.addEventListener('updateend', function (_) {
             mediaSource.endOfStream();
             video.play();
@@ -45,13 +48,14 @@
 
 
       function handleEvent(e) {
-                // console.log(`Event: ${e.type}, ${e.loaded}` );
+                console.log(`Event: ${e.type}, ${e.loaded}` );
                 if (e.type == 'load') {
                     console.log('************');
                 }
 
                 if (e.loaded > 296716970 * .1){
                     console.log('10%');
+                    video.play();
                 }
 
             }
@@ -68,12 +72,12 @@
         console.log(url);
         var xhr = new XMLHttpRequest;
 
-        xhr.addEventListener("loadstart", handleEvent);
-        xhr.addEventListener("load", handleEvent);
-        xhr.addEventListener("loadend", handleEvent);
-        xhr.addEventListener("progress", handleEvent);
-        xhr.addEventListener("error", handleEvent);
-        xhr.addEventListener("abort", handleEvent);
+        // xhr.addEventListener("loadstart", handleEvent);
+        // xhr.addEventListener("load", handleEvent);
+        // xhr.addEventListener("loadend", handleEvent);
+        // xhr.addEventListener("progress", handleEvent);
+        // xhr.addEventListener("error", handleEvent);
+        // xhr.addEventListener("abort", handleEvent);
 
 
 
