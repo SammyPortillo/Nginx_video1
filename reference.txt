@@ -1,7 +1,15 @@
 
-
-
-
-
 https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/progress_event
 https://stackoverflow.com/questions/50333767/html5-video-streaming-video-with-blob-urls
+
+https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+
+
+download progress bar:
+https://openjavascript.info/2022/12/21/download-progress-with-javascripts-fetch-function/
+
+
+fetch2: failed
+https://img.ly/blog/how-to-stream-videos-using-javascript-and-html5/
+
+
