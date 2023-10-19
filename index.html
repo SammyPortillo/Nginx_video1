@@ -1,4 +1,47 @@
+<!DOCTYPE html>
 <html>
+<head>
+<title>Welcome to Sam's Portfolio! 1</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+<script>
+    const videoRequest = fetch("media/video/elevator_pitch.MP4")
+    .then(response => response.blob());
+
+videoRequest.then(blob => {
+    video.src = window.URL.createObjectURL(blob);
+}); 
+    </script>
+</head>
+<body>
+<h1>Welcome to Sam's Portfolio!</h1>
+
+<video id="video" controls></video>
+
+<p><em>This first loads complete video this plays video.</em></p>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <html>
 	<head>
 		<link rel="icon" type="image/png" href="sam.ico">
 		<script>
@@ -87,4 +130,4 @@
 
 		<canvas id="my-canvas" width="300" height="200"> </canvas>
 	</body>
-</html>
+</html> -->
