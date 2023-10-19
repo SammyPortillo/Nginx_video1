@@ -11,3 +11,7 @@ https://openjavascript.info/2022/12/21/download-progress-with-javascripts-fetch-
 
 fetch2: failed
 https://img.ly/blog/how-to-stream-videos-using-javascript-and-html5/
+
+
+fetch3:
+https://www.youtube.com/watch?v=WqBs_msUOXY
