@@ -1,90 +1,86 @@
+<!DOCTYPE html>
 <html>
-	<head>
-		<link rel="icon" type="image/png" href="sam.ico">
-		<script>
+  <head>
+    <meta charset="utf-8"/>
+  </head>
+  <body>
+    <video controls></video>
+    <script>
+      var video = document.querySelector('video');
 
-            function handleEvent(e) {
-                // console.log(`Event: ${e.type}, ${e.loaded}` );
-                if (e.type == 'load') {
-                    console.log('************');
-                }
+      var assetURL = 'frag_bunny.mp4';
+      // Need to be specific for Blink regarding codecs
+      // ./mp4info frag_bunny.mp4 | grep Codec
+      var mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
 
-                if (e.loaded > 296716970 * .1){
-                    console.log('10%');
-                }
+      if ('MediaSource' in window && MediaSource.isTypeSupported(mimeCodec)) {
+        var mediaSource = new MediaSource;
+        //console.log(mediaSource.readyState); // closed
+        video.src = URL.createObjectURL(mediaSource);
+        mediaSource.addEventListener('sourceopen', sourceOpen);
+      } else {
+        console.error('Unsupported MIME type or codec: ', mimeCodec);
+      }
 
-            }
+      function sourceOpen (_) {
+        //console.log(this.readyState); // open
+        var mediaSource = this;
+        var sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+        fetchAB(assetURL, function (buf) {
+          sourceBuffer.addEventListener('updateend', function (_) {
+            mediaSource.endOfStream();
+            video.play();
+            //console.log(mediaSource.readyState); // ended
+          });
+          sourceBuffer.appendBuffer(buf);
+        });
+      };
 
-
-            // https://dinbror.dk/blog/how-to-preload-entire-html5-video-before-play-solved/
-			function backbuff()
-			{
-				console.log("backbuff(1)")
-                var req = new XMLHttpRequest();
-                req.addEventListener("loadstart", handleEvent);
-                req.addEventListener("load", handleEvent);
-                req.addEventListener("loadend", handleEvent);
-                req.addEventListener("progress", handleEvent);
-                req.addEventListener("error", handleEvent);
-                req.addEventListener("abort", handleEvent);
-
-                req.open('GET', 'media/video/elevator_pitch.MP4', true);
-                req.responseType = 'blob';
-                console.log('next: req.onload');
-
-                req.onload = function() {
-                    console.log('req.onload');
-
-                    if (this.status == 200){
-                        var videoBlob = this.response;
-                        var vid = URL.createObjectURL(videoBlob);
-                        console.log('2');
-                        const loadedvideo = document.getElementById("loaded_video");
-                        console.log('3');
-                        loadedvideo.src = vid;
-                        console.log('4');
-                    }
-                }
-                req.onerror = function() {
-                    console.log('error');
-                }
-
-                req.upload.onprogress = function (event)
-                {
-                    console.log('onprogress');
-                    if(event.lengthComputable)
-                    {
-                        var complete = (event.loaded / event.total * 100 | 0);
-                        $('.meter').css('width', complete+'%');
-                        console.log(complete);
-                    }
-                };
-
-                req.send();
-			}
-
-
-		</script>
-	</head>
-
-	<body onload="backbuff()">
-
-	<h3>October 17 - 2</h3>
-	  
-		<video
-		  id="my-video"
-		  controls
-		  preload="auto"
-		  width="640"
-		  height="264"
-		>
-		  <source src="media/video/elevator_pitch.MP4" type="video/mp4" />
-		</video>
-
-
-        <video id="loaded_video" controls></video>
-
-
-		<canvas id="my-canvas" width="300" height="200"> </canvas>
-	</body>
+      function fetchAB (url, cb) {
+        console.log(url);
+        var xhr = new XMLHttpRequest;
+        xhr.open('get', url);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function () {
+          cb(xhr.response);
+        };
+        xhr.send();
+      };
+    </script>
+  </body>
 </html>
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to Sam's Portfolio! 1</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+<script>
+    const videoRequest = fetch("media/video/elevator_pitch.MP4")
+    .then(response => response.blob());
+
+videoRequest.then(blob => {
+    video.src = window.URL.createObjectURL(blob);
+}); 
+    </script>
+</head>
+<body>
+<h1>Welcome to Sam's Portfolio!</h1>
+
+<video id="video" controls></video>
+
+<p><em>This first loads complete video this plays video.</em></p>
+</body>
+</html> -->
