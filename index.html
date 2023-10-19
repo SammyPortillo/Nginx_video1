@@ -8,7 +8,10 @@
     <script>
       var video = document.querySelector('video');
 
-      var assetURL = 'media/video/Big_Buck_Bunny_360_10s_1MB.mp4';
+      // var assetURL = 'media/video/Big_Buck_Bunny_360_10s_1MB.mp4';
+      var assetURL = 'media/video/elevator_pitch.MP4';
+
+
       // Need to be specific for Blink regarding codecs
       // ./mp4info frag_bunny.mp4 | grep Codec
       var mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
@@ -36,9 +39,44 @@
         });
       };
 
+
+
+
+
+
+      function handleEvent(e) {
+                // console.log(`Event: ${e.type}, ${e.loaded}` );
+                if (e.type == 'load') {
+                    console.log('************');
+                }
+
+                if (e.loaded > 296716970 * .1){
+                    console.log('10%');
+                }
+
+            }
+
+
+
+
+
+
+
+
+
       function fetchAB (url, cb) {
         console.log(url);
         var xhr = new XMLHttpRequest;
+
+        xhr.addEventListener("loadstart", handleEvent);
+        xhr.addEventListener("load", handleEvent);
+        xhr.addEventListener("loadend", handleEvent);
+        xhr.addEventListener("progress", handleEvent);
+        xhr.addEventListener("error", handleEvent);
+        xhr.addEventListener("abort", handleEvent);
+
+
+
         xhr.open('get', url);
         xhr.responseType = 'arraybuffer';
         xhr.onload = function () {
