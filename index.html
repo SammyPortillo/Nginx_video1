@@ -2,89 +2,34 @@
 	<head>
 		<link rel="icon" type="image/png" href="sam.ico">
 		<script>
-
-            function handleEvent(e) {
-                // console.log(`Event: ${e.type}, ${e.loaded}` );
-                if (e.type == 'load') {
-                    console.log('************');
-                }
-
-                if (e.loaded > 296716970 * .1){
-                    console.log('10%');
-                }
-
-            }
-
-
-            // https://dinbror.dk/blog/how-to-preload-entire-html5-video-before-play-solved/
 			function backbuff()
 			{
-				console.log("backbuff(1)")
-                var req = new XMLHttpRequest();
-                req.addEventListener("loadstart", handleEvent);
-                req.addEventListener("load", handleEvent);
-                req.addEventListener("loadend", handleEvent);
-                req.addEventListener("progress", handleEvent);
-                req.addEventListener("error", handleEvent);
-                req.addEventListener("abort", handleEvent);
+				console.log("backbuff()");
 
-                req.open('GET', 'media/video/elevator_pitch.MP4', true);
-                req.responseType = 'blob';
-                console.log('next: req.onload');
+        //     video.addEventListener('loadedmetadata', function() {
+        //     if (video.buffered.length === 0) return;
+        
+        //     const bufferedSeconds = video.buffered.end(0) - video.buffered.start(0);
+        //     console.log(`${bufferedSeconds} seconds of video are ready to play.`);
+        //   });
 
-                req.onload = function() {
-                    console.log('req.onload');
-
-                    if (this.status == 200){
-                        var videoBlob = this.response;
-                        var vid = URL.createObjectURL(videoBlob);
-                        console.log('2');
-                        const loadedvideo = document.getElementById("loaded_video");
-                        console.log('3');
-                        loadedvideo.src = vid;
-                        console.log('4');
-                    }
-                }
-                req.onerror = function() {
-                    console.log('error');
-                }
-
-                req.upload.onprogress = function (event)
-                {
-                    console.log('onprogress');
-                    if(event.lengthComputable)
-                    {
-                        var complete = (event.loaded / event.total * 100 | 0);
-                        $('.meter').css('width', complete+'%');
-                        console.log(complete);
-                    }
-                };
-
-                req.send();
 			}
-
-
 		</script>
 	</head>
 
 	<body onload="backbuff()">
-
-	<h3>October 17 - 2</h3>
-	  
-		<video
-		  id="my-video"
-		  controls
-		  preload="auto"
-		  width="640"
-		  height="264"
-		>
-		  <source src="media/video/elevator_pitch.MP4" type="video/mp4" />
-		</video>
-
-
-        <video id="loaded_video" controls></video>
-
-
-		<canvas id="my-canvas" width="300" height="200"> </canvas>
-	</body>
+        <!-- <video id="video" preload="metadata" src="media/video/elevator_pitch.MP4" controls></video> -->
+        <video id="video" preload="auto" src="media/video/Big_Buck_Bunny_360_10s_1MB.mp4" controls></video>
+        
+        <script>
+            console.log('body script');
+            video.addEventListener('loadedmetadata', function() {
+                console.log('addEventListener');
+                if (video.buffered.length === 0) return;
+                //  Only buffered with Chrome
+                const bufferedSeconds = video.buffered.end(0) - video.buffered.start(0);
+                console.log(`${bufferedSeconds} seconds of video are ready to play.`);
+          });
+        </script>
+    </body>
 </html>
