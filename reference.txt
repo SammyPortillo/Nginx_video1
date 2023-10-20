@@ -15,3 +15,10 @@ https://img.ly/blog/how-to-stream-videos-using-javascript-and-html5/
 
 fetch3:
 https://www.youtube.com/watch?v=WqBs_msUOXY
+
+
+
+Fast playback with audio and video preload
+https://web.dev/articles/fast-playback-with-preload
+
+
