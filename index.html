@@ -1,90 +1,53 @@
 <html>
 	<head>
 		<link rel="icon" type="image/png" href="sam.ico">
-		<script>
-
-            function handleEvent(e) {
-                // console.log(`Event: ${e.type}, ${e.loaded}` );
-                if (e.type == 'load') {
-                    console.log('************');
-                }
-
-                if (e.loaded > 296716970 * .1){
-                    console.log('10%');
-                }
-
-            }
-
-
-            // https://dinbror.dk/blog/how-to-preload-entire-html5-video-before-play-solved/
-			function backbuff()
-			{
-				console.log("backbuff(1)")
-                var req = new XMLHttpRequest();
-                req.addEventListener("loadstart", handleEvent);
-                req.addEventListener("load", handleEvent);
-                req.addEventListener("loadend", handleEvent);
-                req.addEventListener("progress", handleEvent);
-                req.addEventListener("error", handleEvent);
-                req.addEventListener("abort", handleEvent);
-
-                req.open('GET', 'media/video/elevator_pitch.MP4', true);
-                req.responseType = 'blob';
-                console.log('next: req.onload');
-
-                req.onload = function() {
-                    console.log('req.onload');
-
-                    if (this.status == 200){
-                        var videoBlob = this.response;
-                        var vid = URL.createObjectURL(videoBlob);
-                        console.log('2');
-                        const loadedvideo = document.getElementById("loaded_video");
-                        console.log('3');
-                        loadedvideo.src = vid;
-                        console.log('4');
-                    }
-                }
-                req.onerror = function() {
-                    console.log('error');
-                }
-
-                req.upload.onprogress = function (event)
-                {
-                    console.log('onprogress');
-                    if(event.lengthComputable)
-                    {
-                        var complete = (event.loaded / event.total * 100 | 0);
-                        $('.meter').css('width', complete+'%');
-                        console.log(complete);
-                    }
-                };
-
-                req.send();
-			}
-
-
-		</script>
 	</head>
 
-	<body onload="backbuff()">
+	<body>
 
-	<h3>October 17 - 2</h3>
-	  
-		<video
-		  id="my-video"
-		  controls
-		  preload="auto"
-		  width="640"
-		  height="264"
-		>
-		  <source src="media/video/elevator_pitch.MP4" type="video/mp4" />
-		</video>
+	<h3>October 17 - 3</h3>
+    <video id="video" controls></video>
 
+    <script>
+      const mediaSource = new MediaSource();
+      video.src = URL.createObjectURL(mediaSource);
+      mediaSource.addEventListener('sourceopen', sourceOpen, { once: true });
+    
+      function sourceOpen() {
+        URL.revokeObjectURL(video.src);
+        const sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp09.00.10.08"');
+    
+        // Fetch beginning of the video by setting the Range HTTP request header.
+        fetch('media/video/big-buck-bunny_trailer.webm', { headers: { range: 'bytes=0-567139' } })
+        .then(response => response.arrayBuffer())
+        .then(data => {
+          sourceBuffer.appendBuffer(data);
+          sourceBuffer.addEventListener('updateend', updateEnd, { once: true });
+        });
+      }
+    
+      function updateEnd() {
+        // Video is now ready to play!
+        // video.addEventListener('playing', fetchNextSegment, { once: true });
+        console.log(`31 video.buffered.length = ${video.buffered.length}`);
+        // if (video.buffered.length === 0) return;
+        const bufferedSeconds = video.buffered.end(0) - video.buffered.start(0);
+        console.log(`${bufferedSeconds} seconds of video are ready to play.`);
+    
+        // Fetch the next segment of video when user starts playing the video.
+        video.addEventListener('playing', fetchNextSegment, { once: true });
+      }
+    
+      function fetchNextSegment() {
+        fetch('media/video/big-buck-bunny_trailer.webm', { headers: { range: 'bytes=567140-1196488' } })
+        .then(response => response.arrayBuffer())
+        .then(data => {
+          const sourceBuffer = mediaSource.sourceBuffers[0];
+          sourceBuffer.appendBuffer(data);
+          // TODO: Fetch further segment and append it.
+        });
+      }
+    </script>
 
-        <video id="loaded_video" controls></video>
-
-
-		<canvas id="my-canvas" width="300" height="200"> </canvas>
 	</body>
 </html>
