@@ -1,90 +1,177 @@
 <html>
 	<head>
 		<link rel="icon" type="image/png" href="sam.ico">
-		<script>
 
-            function handleEvent(e) {
-                // console.log(`Event: ${e.type}, ${e.loaded}` );
-                if (e.type == 'load') {
-                    console.log('************');
-                }
+        <style>
 
-                if (e.loaded > 296716970 * .1){
-                    console.log('10%');
-                }
-
+            body {
+              font-family: Arial, Helvetica, sans-serif;
             }
+          
+            /* CSS Progress bar */
+            .wrapper {
+                width: 600px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                margin: 0px auto;
+                margin-top: 30vh;
+            }
+            .progress-bar {
+                width: 100%;
+                background-color: whitesmoke;
+                padding: 2px;
+            }
+            .progress-bar-fill {
+                display: block;
+                height: 40px;
+                background-color: #65ef88;
+                border-radius: 3px;
+                width: 0%; /* Starts at 0%, updates with download progress */
+                    
+                transition: width 30ms ease-in-out;
+            }
+            .progress-text {
+                font-size: 1.5rem;
+                padding: 10px;
+            }
+            img {
+                display: block;
+                margin: 0px auto;
+            }
+            
+          </style>
 
 
-            // https://dinbror.dk/blog/how-to-preload-entire-html5-video-before-play-solved/
-			function backbuff()
-			{
-				console.log("backbuff(1)")
-                var req = new XMLHttpRequest();
-                req.addEventListener("loadstart", handleEvent);
-                req.addEventListener("load", handleEvent);
-                req.addEventListener("loadend", handleEvent);
-                req.addEventListener("progress", handleEvent);
-                req.addEventListener("error", handleEvent);
-                req.addEventListener("abort", handleEvent);
 
-                req.open('GET', 'media/video/elevator_pitch.MP4', true);
-                req.responseType = 'blob';
-                console.log('next: req.onload');
 
-                req.onload = function() {
-                    console.log('req.onload');
 
-                    if (this.status == 200){
-                        var videoBlob = this.response;
-                        var vid = URL.createObjectURL(videoBlob);
-                        console.log('2');
-                        const loadedvideo = document.getElementById("loaded_video");
-                        console.log('3');
-                        loadedvideo.src = vid;
-                        console.log('4');
-                    }
+
+
+
+        <script>
+            fetch('https://sammyportillo.github.io/portfolio/images/2020.JPG')
+  .then(response => {
+
+    const contentLength = response.headers.get('content-length');
+    // Gets length in bytes (must be provided by server)
+
+    let loaded = 0;
+    // Will be used to track loading
+
+    return new Response(
+
+      new ReadableStream({
+      // Creates new readable stream on the new response object
+        
+        start(controller) {
+        // Controller has methods on that allow the new stream to be constructed
+
+          const reader = response.body.getReader();
+          // Creates a new reader to read the body of the fetched resources
+
+          read();
+          // Fires function below that starts reading
+
+          function read() {
+
+            reader.read()
+            .then((progressEvent) => {
+            // Starts reading, when there is progress this function will fire
+              
+              if (progressEvent.done) {
+                controller.close();
+                return; 
+                // Will finish constructing new stream if reading fetched of resource is complete
+              }
+              
+              loaded += progressEvent.value.byteLength;
+              // Increase value of 'loaded' by latest reading of fetched resource
+
+              console.log(Math.round(loaded/contentLength*100)+'%');
+              // Displays progress via console log as %
+
+              controller.enqueue(progressEvent.value);
+              // Add newly read data to the new readable stream
+
+              read();
+              // Runs function again to continue reading and creating new stream
+
+            })
+          }
+        }
+      })
+    );
+  })
+  .then(response => response.blob()) // Read new readable stream to blob
+  .then(blob => {
+    new Image().src = URL.createObjectURL(blob);
+    document.body.appendChild(img);
+    // Create new URL to blob image, set as src of image and append to DOM
+  })
+        </script>
+</head>
+
+
+
+
+
+
+<body>
+
+    <div class="wrapper">
+      <div class="progress-bar">
+        <span class="progress-bar-fill"></span>  
+      </div>
+      <span class="progress-text">Download starting...</span>
+    </div>
+  
+  </body>
+  <script>
+      
+    const fill = document.querySelector('.progress-bar-fill');
+    const text = document.querySelector('.progress-text');
+  
+    fetch('https://sammyportillo.github.io/portfolio/images/2020.JPG')
+    .then(response => {
+      const contentLength = response.headers.get('content-length');
+      let loaded = 0;
+      return new Response(
+        new ReadableStream({
+          start(controller) {
+            const reader = response.body.getReader();
+            read();
+            function read() {
+              reader.read()
+              .then((progressEvent) => {
+                if (progressEvent.done) {
+                  controller.close();
+                  return; 
                 }
-                req.onerror = function() {
-                    console.log('error');
-                }
-
-                req.upload.onprogress = function (event)
-                {
-                    console.log('onprogress');
-                    if(event.lengthComputable)
-                    {
-                        var complete = (event.loaded / event.total * 100 | 0);
-                        $('.meter').css('width', complete+'%');
-                        console.log(complete);
-                    }
-                };
-
-                req.send();
-			}
-
-
-		</script>
-	</head>
-
-	<body onload="backbuff()">
-
-	<h3>October 17 - 2</h3>
-	  
-		<video
-		  id="my-video"
-		  controls
-		  preload="auto"
-		  width="640"
-		  height="264"
-		>
-		  <source src="media/video/elevator_pitch.MP4" type="video/mp4" />
-		</video>
+                loaded += progressEvent.value.byteLength;
+  
+                const percentageComplete = Math.round(loaded/contentLength*100)+'%';
+                fill.style.width = percentageComplete;
+                text.innerText = percentageComplete;
+                // Calculates % complete and updates progress bar and print text to DOM
+  
+                controller.enqueue(progressEvent.value);
+                read();
+              })
+            }
+          }
+        })
+      );
+    })
+    .then(response => response.blob())
+    .then(blob => {
+      const img = new Image()
+      img.src = URL.createObjectURL(blob);
+      document.body.appendChild(img);
+    })
+  
+  </script>
 
 
-        <video id="loaded_video" controls></video>
-
-
-		<canvas id="my-canvas" width="300" height="200"> </canvas>
-	</body>
 </html>
