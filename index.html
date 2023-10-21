@@ -51,7 +51,7 @@
 
 
         <script>
-            fetch('https://sammyportillo.github.io/portfolio/images/2020.JPG')
+            fetch('media/video/Big_Buck_Bunny_360_10s_1MB.mp4')
   .then(response => {
 
     const contentLength = response.headers.get('content-length');
@@ -106,8 +106,10 @@
   })
   .then(response => response.blob()) // Read new readable stream to blob
   .then(blob => {
-    new Image().src = URL.createObjectURL(blob);
-    document.body.appendChild(img);
+    // new Image().src = URL.createObjectURL(blob);
+    const my_vid = document.getElementById("my-video");
+    my_vid.src = URL.createObjectURL(blob);
+    // document.body.appendChild(img);
     // Create new URL to blob image, set as src of image and append to DOM
   })
         </script>
@@ -119,7 +121,9 @@
 
 
 <body>
+    <h1>blob_video</h1>
 
+<video id="my-video" controls></video>
     <div class="wrapper">
       <div class="progress-bar">
         <span class="progress-bar-fill"></span>  
@@ -133,7 +137,7 @@
     const fill = document.querySelector('.progress-bar-fill');
     const text = document.querySelector('.progress-text');
   
-    fetch('https://sammyportillo.github.io/portfolio/images/2020.JPG')
+    fetch('media/video/Big_Buck_Bunny_360_10s_1MB.mp4')
     .then(response => {
       const contentLength = response.headers.get('content-length');
       let loaded = 0;
@@ -166,9 +170,12 @@
     })
     .then(response => response.blob())
     .then(blob => {
-      const img = new Image()
-      img.src = URL.createObjectURL(blob);
-      document.body.appendChild(img);
+    //   const img = new Image()
+    //   img.src = URL.createObjectURL(blob);
+    //   document.body.appendChild(img);
+    const my_vid = document.getElementById("my-video");
+    my_vid.src = window.URL.createObjectURL(blob);
+    my_vid.play();
     })
   
   </script>
