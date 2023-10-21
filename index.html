@@ -30,8 +30,6 @@
     
       function updateEnd() {
         // Video is now ready to play!
-        // video.addEventListener('playing', fetchNextSegment, { once: true });
-        console.log(`31 video.buffered.length = ${video.buffered.length}`);
         // if (video.buffered.length === 0) return;
         const bufferedSeconds = video.buffered.end(0) - video.buffered.start(0);
         console.log(`${bufferedSeconds} seconds of video are ready to play.`);
