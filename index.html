@@ -51,7 +51,12 @@
 
 
         <script>
-            fetch('media/video/Big_Buck_Bunny_360_10s_1MB.mp4')
+          // alert('Hello');
+          const fill2 = document.querySelector('.progress-bar-fill');
+          const text2 = document.querySelector('.progress-text');
+
+            // fetch('media/video/Big_Buck_Bunny_360_10s_1MB.mp4')
+            fetch('media/video/elevator_pitch.MP4')
   .then(response => {
 
     const contentLength = response.headers.get('content-length');
@@ -91,6 +96,12 @@
 
               console.log(Math.round(loaded/contentLength*100)+'%');
               // Displays progress via console log as %
+
+              const percentageComplete = Math.round(loaded/contentLength*100)+'%';
+                fill2.style.width = percentageComplete;
+                text2.innerText = percentageComplete;
+
+
 
               controller.enqueue(progressEvent.value);
               // Add newly read data to the new readable stream
@@ -133,11 +144,13 @@
   
   </body>
   <script>
-      
+    // return;
+    alert('skip this');
     const fill = document.querySelector('.progress-bar-fill');
     const text = document.querySelector('.progress-text');
   
-    fetch('media/video/Big_Buck_Bunny_360_10s_1MB.mp4')
+    // fetch('media/video/Big_Buck_Bunny_360_10s_1MB.mp4')
+    fetch('media/video/elevator_pitch.MP4')
     .then(response => {
       const contentLength = response.headers.get('content-length');
       let loaded = 0;
@@ -154,12 +167,14 @@
                   return; 
                 }
                 loaded += progressEvent.value.byteLength;
-  
+                console.log(Math.round(loaded/contentLength*100)+'%');    // New
+                // Extra 3 lines
                 const percentageComplete = Math.round(loaded/contentLength*100)+'%';
                 fill.style.width = percentageComplete;
                 text.innerText = percentageComplete;
                 // Calculates % complete and updates progress bar and print text to DOM
   
+
                 controller.enqueue(progressEvent.value);
                 read();
               })
@@ -175,7 +190,7 @@
     //   document.body.appendChild(img);
     const my_vid = document.getElementById("my-video");
     my_vid.src = window.URL.createObjectURL(blob);
-    my_vid.play();
+    // my_vid.play();
     })
   
   </script>
