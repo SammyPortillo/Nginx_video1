@@ -4,7 +4,7 @@ function winscript() {
     // alert('Hello');
     const fill = document.querySelector('.progress-bar-fill');
     const text = document.querySelector('.progress-text');
-
+    var gotvideo = false;
     // fetch('media/video/Big_Buck_Bunny_360_10s_1MB.mp4')
     fetch('media/video/elevator_pitch.MP4')
         .then(response => {
@@ -51,7 +51,15 @@ function winscript() {
                                     fill.style.width = percentageComplete;
                                     text.innerText = percentageComplete;
 
+                                    
+                                    if ( !gotvideo && loaded / contentLength > .05){
+                                        gotvideo = true;
+                                        console.log('********************');
+                                    // const my_vid = document.getElementById("my-video");
+                                    // my_vid.src = window.URL.createObjectURL(blob);
 
+                                    }
+                        
 
                                     controller.enqueue(progressEvent.value);
                                     // Add newly read data to the new readable stream
