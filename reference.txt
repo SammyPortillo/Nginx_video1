@@ -22,3 +22,7 @@ Fast playback with audio and video preload
 https://web.dev/articles/fast-playback-with-preload
 
 
+
+Blobs and Blob URLs | JavaScript Tutorial
+https://www.youtube.com/watch?v=WqBs_msUOXY
+https://openjavascript.info/2022/10/17/what-is-a-blob-object-in-javascript/
